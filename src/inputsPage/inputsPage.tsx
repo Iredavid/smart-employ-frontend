@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-// import LinearProgress from "@mui/material/LinearProgress";
+import LinearProgress from "@mui/material/LinearProgress";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Chip from "@mui/material/Chip";
@@ -11,14 +11,28 @@ import { departmentFacultyMap } from "./department";
 import { facultySkillsMap, universalSkills } from "./faculty";
 import { AiResult } from "../aiResultPage/aiResult";
 import { styled } from "@mui/material/styles";
-import DoneIcon from '@mui/icons-material/Done';
-import Button from "@mui/material/Button";
-import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import DoneIcon from "@mui/icons-material/Done";
+import Button, { type ButtonProps } from "@mui/material/Button";
+import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 import { Link } from "react-router-dom";
-
+import { blue } from "@mui/material/colors";
 
 const ListItem = styled("li")(({ theme }) => ({
   margin: theme.spacing(0.5),
+}));
+
+const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
+  color: theme.palette.getContrastText(blue[600]),
+  backgroundColor: blue[600],
+  padding: theme.spacing(1.5, 4),
+  marginInline: "auto",
+  display: "block",
+  borderRadius: 10,
+  fontWeight: "bold",
+  "&:hover": {
+    backgroundColor: blue[700],
+    transition: "background-color 0.3s",
+  },
 }));
 
 interface EmployabilityFormData {
@@ -29,7 +43,7 @@ interface EmployabilityFormData {
 }
 
 export default function LinearIndeterminate() {
-  return <Box sx={{ width: "100%" }}>{/* <LinearProgress /> */}</Box>;
+  return <Box sx={{ width: "100%" }}>{<LinearProgress />}</Box>;
 }
 
 export function DepartmentSelect({
@@ -161,11 +175,14 @@ export function EmployabilityForm() {
     if (isLoading) return;
     setIsLoading(true);
     try {
-      const text = await fetch("https://smart-employability-api.onrender.com/predict", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const text = await fetch(
+        "https://smart-employability-api.onrender.com/predict",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        },
+      );
       const result = await text.json();
       console.log("AI Result:", result);
       setCareer(result.career);
@@ -215,12 +232,7 @@ export function EmployabilityForm() {
     );
   }
   return (
-    <div className="relative">
-      <Link to="/" >
-    <Button startIcon={<KeyboardReturnIcon />} size="large">
-  Go back
-</Button>
-      </Link>
+    <div className="min-h-screen bg-gray-50">
       <div className="fixed top-0 left-0 right-0 z-50">
         <Slide direction="down" in={isError} mountOnEnter unmountOnExit>
           <Alert severity="error" sx={{ mb: 2 }}>
@@ -229,24 +241,36 @@ export function EmployabilityForm() {
           </Alert>
         </Slide>
 
-        {/* {isLoading ? <LinearIndeterminate /> : null} */}
+        {isLoading ? <LinearIndeterminate /> : null}
       </div>
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="w-full md:h-full h-screen max-w-3xl bg-white rounded-2xl md:shadow-lg p-6 pt-0 md:p-8 flex flex-col">
-          <div className="">
-            <h1 className="lg:text-2xl md:text-2xl sm:text-2xl text-xl font-bold text-gray-800 mb-2">
+      <div className="mx-auto flex min-h-screen w-full max-w-7xl items-center justify-center px-4 py-6 sm:px-6 lg:px-8">
+        <div className="w-full max-w-4xl rounded-3xl bg-white shadow-sm md:shadow-xl border border-gray-100">
+          <div className="border-b border-gray-100 px-4 py-4 sm:px-6 md:px-8">
+            <Link to="/">
+              <Button
+                startIcon={<KeyboardReturnIcon />}
+                size="medium"
+                sx={{ mb: 2 }}
+              >
+                Go back
+              </Button>
+            </Link>
+            <h1 className="text-xl font-bold text-gray-800 sm:text-2xl">
               Employability Assessment
             </h1>
-            <p className="text-gray-500 mb-6">
+            <p className="mt-2 text-sm text-gray-500 sm:text-base">
               Fill in your details to receive an AI-powered employability rating
               and career guidance.
             </p>
           </div>
-          <form onSubmit={handleSubmit} className="space-y-6 flex-1 relative md:pb-0 pb-5">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-8 px-4 py-6 sm:px-6 md:px-8"
+          >
             {/* Academic Info */}
-            <div className="grid sm:grid-cols-2 md:gap-4 gap-5">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium mb-1">
+                <label className="mb-2 block text-sm font-medium">
                   Department
                 </label>
                 <DepartmentSelect
@@ -256,7 +280,7 @@ export function EmployabilityForm() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">CGPA</label>
+                <label className="mb-2 block text-sm font-medium">CGPA</label>
                 <input
                   type="number"
                   step="0.01"
@@ -266,21 +290,21 @@ export function EmployabilityForm() {
                   value={formData.cgpa}
                   onChange={handleChange}
                   placeholder="e.g 3.45"
-                  className="w-full border border-gray-300 hover:border-black rounded-sm px-3 py-3.75 focus:outline-none focus:border-blue-600 focus:border-2"
+                  className="w-full border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-600"
                   required
                 />
               </div>
             </div>
-            <label className="block my-4 text-sm font-medium">
+            <label className="mb-3 block text-sm font-medium">
               Universal Skills
             </label>
             <ChipsArray />
             {/* Experience */}
-            <div className="grid sm:grid-cols-2 md:gap-4 gap-5">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               {/* Skills */}
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  Department based Skills or Interests
+                <label className="mb-2 block text-sm font-medium">
+                  Department based Skills / Interests
                 </label>
                 <SkillSelect
                   key={formData.department}
@@ -290,14 +314,14 @@ export function EmployabilityForm() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="mb-2 block text-sm font-medium">
                   Internship Experience
                 </label>
                 <select
                   name="internship"
                   value={formData.internship}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 hover:border-black focus:border-blue-600 focus:border-2 rounded-sm px-3 py-3.75 outline-none"
+                  className="w-full border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-600"
                   required
                 >
                   <option value="">Select</option>
@@ -306,14 +330,15 @@ export function EmployabilityForm() {
                 </select>
               </div>
             </div>
-
-            <button
-              // disabled={isLoading}
-              type="submit"
-              className="p-5 m-auto block bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition md:w-auto"
-            >
-              Get Employability Rating
-            </button>
+            <div className="pt-2">
+              <ColorButton
+                loading={isLoading}
+                variant="contained"
+                type="submit"
+              >
+                Get Employability Rating
+              </ColorButton>
+            </div>
           </form>
           <AiResult
             result={career}
@@ -325,43 +350,4 @@ export function EmployabilityForm() {
       </div>
     </div>
   );
-}
-
-{
-  /* Soft Skills */
-}
-{
-  /* <div>
-              <label className="block text-sm font-medium mb-3">
-                Soft Skills
-              </label>
-              <div className="grid md:grid-cols-2 gap-3">
-                {formData.softSkills.map((skill) => (
-                  <div key={skill.name} className="">
-                    <div className="flex justify-between text-sm mb-1 capitalize">
-                      <span>{skill.name.replace(/([A-Z])/g, " $1")}</span>
-                      <span>{skill.value}/5</span>
-                    </div>
-                    <input
-                      type="range"
-                      min="0"
-                      max="5"
-                      value={skill.value}
-                      name={skill.name}
-                      onChange={(e) =>
-                        handleSoftSkillChange(
-                          skill.name,
-                          Number(e.target.value),
-                        )
-                      }
-                      className="w-full"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div> */
-}
-
-{
-  /* Submit */
 }

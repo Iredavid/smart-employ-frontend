@@ -1,60 +1,5 @@
-// import { Link } from "react-router-dom";
-
-// export function Header() {
-//   return (
-//     <div className="md:container md:top-3 -translate-x-1/2 left-[50%] fixed z-999 backdrop-blur-3xl md:w-[80%] w-full md:rounded-2xl shadow">
-//       <div className="header container mx-auto flex justify-between items-center py-3 px-5">
-//         <div className="logo h-full flex items-center gap-3">
-//           <img
-//             src="https://images-platform.99static.com//XDqAq_HapvXR9AWeozwbmXyPR3E=/168x2172:1831x3835/fit-in/500x500/99designs-contests-attachments/128/128327/attachment_128327450"
-//             className="size-10"
-//             alt=""
-//           />
-//           <div className="logoTxt lg:block hidden">Smart Employ</div>
-//         </div>
-//         <nav className="navBar lg:flex md:block hidden sm:hidden xs:hidden">
-//           <ul className="list-none flex md:gap-5 font-medium text-lg cursor-pointer gap-5 sm:gap-5">
-//             <li>
-//               <a href="#home" className="active:text-indigo-500">
-//                 Home
-//               </a>
-//             </li>
-//             <li>
-//               <a href="#about" className="active:text-indigo-500">
-//                 About
-//               </a>
-//             </li>
-//             <li>
-//               <a href="#features" className="active:text-indigo-500">
-//                 Features
-//               </a>
-//             </li>
-//             <li>
-//               <a href="#stats" className="active:text-indigo-500">
-//                 Stats
-//               </a>
-//             </li>
-//             {/* <li><a href="#testimonials" className="active:text-indigo-500">Testimonials</a></li> */}
-//             <li>
-//               <a href="#suggestions" className="active:text-indigo-500">
-//                 Suggestions
-//               </a>
-//             </li>
-//           </ul>
-//         </nav>
-//         <div className="actBtns">
-//           <button className="aiResBtn">
-//             <Link to="/inputs">Try now</Link>
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-
 const sections = ["home", "about", "features", "stats", "suggestions"];
 
 function useActiveSection() {
@@ -143,6 +88,16 @@ export function Header() {
                     <li key={item}>
                       <a
                         href={`#${item.toLowerCase()}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+
+                          document
+                            .getElementById(item.toLowerCase())
+                            ?.scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                            });
+                        }}
                         className={`
                     relative
                     transition-all
