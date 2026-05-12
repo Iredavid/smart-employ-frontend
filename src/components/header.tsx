@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Sling as Hamburger } from "hamburger-react";
+
 const sections = ["home", "about", "features", "stats", "suggestions"];
 
 function useActiveSection() {
@@ -8,15 +10,17 @@ function useActiveSection() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries.find((entry) => entry.isIntersecting);
+        const visibleSections = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
 
-        if (visible) {
-          setActiveSection(visible.target.id);
+        if (visibleSections.length > 0) {
+          setActiveSection(visibleSections[0].target.id);
         }
       },
       {
-        rootMargin: "-30% 0px -50% 0px",
-        threshold: 0.2,
+        rootMargin: "-20% 0px -60% 0px",
+        threshold: [0.05, 0.2, 0.4, 0.6],
       },
     );
 
@@ -35,6 +39,8 @@ function useActiveSection() {
 }
 export function Header() {
   const activeSection = useActiveSection();
+  const [menuOpen, setmenuOpen] = useState(false);
+
   return (
     <header className="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-full px-4">
       <div
@@ -80,7 +86,7 @@ export function Header() {
 
           {/* Nav */}
           <nav className="hidden sm:block z-10">
-            <ul className="flex gap-5 sm:gap-8 font-medium">
+            <ul className="flex  gap-5 sm:gap-8 font-medium">
               {["Home", "About", "Features", "Stats", "Suggestions"].map(
                 (item) => {
                   const isActive = activeSection === item.toLocaleLowerCase();
@@ -146,9 +152,14 @@ export function Header() {
               )}
             </ul>
           </nav>
-
           {/* CTA */}
-          <div className="z-10">
+          <div className=" flex gap-5 items-center">
+            <div
+              className="sm:hidden"
+              onClick={() => setmenuOpen((prev) => !prev)}
+            >
+              <Hamburger />
+            </div>
             <Link
               to="/inputs"
               className="
@@ -168,6 +179,84 @@ export function Header() {
               Try Now
             </Link>
           </div>
+        </div>
+        <div
+          className={`
+    overflow-hidden
+    transition-all
+    duration-500
+    ease-in-out
+
+    ${
+      menuOpen
+        ? "max-h-96 opacity-100 translate-y-0"
+        : "max-h-0 opacity-0 -translate-y-2"
+    }
+  `}
+        >
+          <nav className="sm:hidden">
+            <ul className="flex flex-col p-5 pt-0 items-center gap-5 sm:gap-8 font-medium">
+              {["Home", "About", "Features", "Stats", "Suggestions"].map(
+                (item) => {
+                  const isActive = activeSection === item.toLocaleLowerCase();
+                  return (
+                    <li key={item}>
+                      <a
+                        href={`#${item.toLowerCase()}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+
+                          document
+                            .getElementById(item.toLowerCase())
+                            ?.scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                            });
+                        }}
+                        className={`
+                    relative
+                    transition-all
+                    duration-300
+
+                      after:absolute
+                    after:left-0
+                    after:-bottom-1
+                    after:h-0.5
+                    after:w-0
+                    after:bg-indigo-500
+                    after:rounded-full
+                    after:transition-all
+                    after:duration-300
+                    hover:after:w-full
+                                            ${
+                                              isActive
+                                                ? "text-indigo-600"
+                                                : "text-gray-700 hover:text-indigo-500"
+                                            }
+
+                        after:absolute
+                        after:left-0
+                        after:-bottom-1
+                        after:h-0.5
+                        after:rounded-full
+                        after:bg-indigo-500
+                        after:transition-all
+                        after:duration-300
+                        ${
+                          isActive
+                            ? "after:w-full"
+                            : "after:w-0 hover:after:w-full"
+                        }
+                      `}
+                      >
+                        {item}
+                      </a>
+                    </li>
+                  );
+                },
+              )}
+            </ul>
+          </nav>
         </div>
       </div>
     </header>

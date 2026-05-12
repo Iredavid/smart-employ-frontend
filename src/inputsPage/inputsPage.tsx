@@ -176,7 +176,7 @@ export function EmployabilityForm() {
     setIsLoading(true);
     try {
       const text = await fetch(
-        "https://smart-employability-api.onrender.com/predict",
+        "http://127.0.0.1:5000/predict",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

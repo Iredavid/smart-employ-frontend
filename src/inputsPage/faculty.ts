@@ -4,18 +4,17 @@ interface ChipData {
   label: string;
 }
 export const universalSkills: ChipData[] = [
-      { key: 0, label: 'Communication' },
-    { key: 1, label: 'Research Skills' },
-    { key: 2, label: 'Critical Thinking' },
-    { key: 3, label: 'Data Analysis' },
-    { key: 4, label: 'Networking' },
+  { key: 0, label: "Communication" },
+  { key: 1, label: "Research Skills" },
+  { key: 2, label: "Critical Thinking" },
+  { key: 3, label: "Data Analysis" },
+  { key: 4, label: "Networking" },
   // "Communication",
   // "Research Skills",
   // "Critical Thinking",
   // "Data Analysis",
   // "Networking",
 ];
-
 
 // ✅ Faculty-specific skills only
 export const facultySkillsMap: Record<string, string[]> = {
@@ -27,7 +26,6 @@ export const facultySkillsMap: Record<string, string[]> = {
     "Cybersecurity",
     "Database Management",
     "UI/UX Design",
-    "Software Engineering",
     // "Cloud Computing",
   ],
 
@@ -101,55 +99,3 @@ export const facultySkillsMap: Record<string, string[]> = {
     // "Negotiation",
   ],
 };
-
-
-
-// // ✅ Faculty → Skills
-// export  const facultySkillsMap: Record<string, string[]> = {
-//   Computing: [
-//     "Python", "Java", "Web Development", "Data Analysis",
-//     "Machine Learning", "Cybersecurity", "Networking",
-//     "Database Management", "UI/UX Design", "Research Skills",
-//   ],
-
-//   Science: [
-//     "Laboratory Skills", "Research Skills",
-//     "Data Analysis", "Statistical Analysis", "Technical Writing", "Networking","Communication",
-//   ],
-
-//   Education: [
-//     "Teaching", "Communication", "Counselling",
-//     "Classroom Management", "Curriculum Development", "Research Skills","Networking","Communication",
-//   ],
-
-//   "Social Sciences": [
-//     "Data Analysis", "Research Skills",
-//     "Critical Thinking", "Communication", "Policy Analysis","Networking",
-//   ],
-
-//   "Management Sciences": [
-//     "Financial Analysis", "Data Analysis",
-//     "Project Management", "Communication",
-//     "Marketing", "Accounting Software","Networking","Communication",
-//   ],
-
-//   Arts: [
-//     "Communication", "Writing",
-//     "Critical Thinking", "Research Skills", "Content Creation","Networking"
-//   ],
-
-//   Agriculture: [
-//     "Field Work", "Data Analysis",
-//     "Research Skills", "Environmental Analysis","Networking","Communication"
-//   ],
-
-//   "Environmental Design": [
-//     "GIS", "Data Analysis",
-//     "Urban Planning", "Environmental Analysis","Networking","Communication"
-//   ],
-
-//   Law: [
-//     "Legal Research", "Writing",
-//     "Critical Thinking", "Communication", "Argumentation","Networking","Communication"
-//   ]
-// };

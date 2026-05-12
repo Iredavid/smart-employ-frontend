@@ -11,11 +11,6 @@ export function CtaSec() {
           strengths, bridge skill gaps, and stay ahead in today’s job market.
         </p>
         <div className="border-indigo-200 rounded-md lg:py-20 px-8 text-center">
-          {/* Top small line */}
-          {/* <div className="flex flex-col items-center mb-6">
-          <div className="w-12 h-1 bg-blue-400 rounded-full mb-2"></div>
-          <div className="w-32 h-0.5 bg-blue-200"></div>
-        </div> */}
 
           {/* Stats */}
           <div className="grid md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-2 lg:gap-16 gap-8 text-blue-500">
