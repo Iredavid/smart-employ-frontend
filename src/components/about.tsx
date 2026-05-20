@@ -1,8 +1,8 @@
-import React from "../assets/Mind map-rafiki.png";
+import aboutImg from "../assets/Mind map-rafiki.png";
 
 export function About() {
   return (
-    <div id="about" className="container flex lg:flex-row-reverse flex-col px-10 mx-auto items-center lg:py-0 pt-10 scroll-mt-28">
+    <div id="about" className="container flex lg:flex-row-reverse flex-col px-4 mx-auto items-center lg:py-0 pt-10 scroll-mt-28">
       <div className="text-center lg:w-1/2 lg:text-left">
         <h1 className="mb-4 text-blue-600">About</h1>
         <p className="lg:text-4xl text-xl font-bold leading-normal lg:text-left sm:text-center xs:text-center sm:text-3xl xs:text-2xl mb-2">
@@ -14,7 +14,7 @@ export function About() {
         </h4>
       </div>
       <div className="lg:w-1/2">
-        <img src={React} alt="" />
+        <img src={aboutImg} alt="" />
       </div>
     </div>
   );

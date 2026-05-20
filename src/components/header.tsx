@@ -70,7 +70,7 @@ export function Header() {
         "
         />
 
-        <div className="flex items-center justify-between px-6 py-4">
+        <div className=" relative flex items-center justify-between px-6 py-4">
           {/* Logo */}
           <div className="flex items-center gap-3 z-10">
             <img
@@ -79,11 +79,10 @@ export function Header() {
               alt=""
             />
 
-            <span className="hidden lg:block font-semibold text-lg tracking-tight">
+            <span className="hidden min-[540px]:max-[640px]:block min-[641px]:hidden lg:block font-semibold text-lg tracking-tight">
               Smart Employ
             </span>
           </div>
-
           {/* Nav */}
           <nav className="hidden sm:block z-10">
             <ul className="flex  gap-5 sm:gap-8 font-medium">
@@ -153,13 +152,20 @@ export function Header() {
             </ul>
           </nav>
           {/* CTA */}
+          <div
+            className="
+              sm:hidden
+              absolute
+              left-1/2
+              -translate-x-1/2
+              top-4
+              z-50
+            "
+            onClick={() => setmenuOpen((prev) => !prev)}
+          >
+            <Hamburger />
+          </div>
           <div className=" flex gap-5 items-center">
-            <div
-              className="sm:hidden"
-              onClick={() => setmenuOpen((prev) => !prev)}
-            >
-              <Hamburger />
-            </div>
             <Link
               to="/inputs"
               className="

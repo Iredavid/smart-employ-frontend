@@ -48,6 +48,7 @@ export const facultySkillsMap: Record<string, string[]> = {
 
   "Social Sciences": [
     "Policy Analysis",
+    "Argumentation",
     // "Survey Design",
     // "Behavioral Analysis",
     // "Public Administration",
@@ -85,7 +86,6 @@ export const facultySkillsMap: Record<string, string[]> = {
     "GIS",
     "Urban Planning",
     // "Architectural Design",
-    "Environmental Analysis",
     // "CAD Design",
     // "Spatial Analysis",
   ],

@@ -15,22 +15,46 @@ import DoneIcon from "@mui/icons-material/Done";
 import Button, { type ButtonProps } from "@mui/material/Button";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 import { Link } from "react-router-dom";
-import { blue } from "@mui/material/colors";
+
+type SkillOption = {
+  faculty: string;
+  skill: string;
+};
+type Strength = string;
+
+type ActionPlanItem = {
+  title: string;
+  detail: string;
+  priority: "High" | "Medium" | "Low";
+};
+
+type summary = {
+  career: string;
+  employability_score: number;
+  message: string;
+};
+
+export type Recommendations = {
+  summary: summary;
+  strengths: Strength[];
+  action_plan: ActionPlanItem[];
+  closing_note: string;
+};
 
 const ListItem = styled("li")(({ theme }) => ({
   margin: theme.spacing(0.5),
 }));
 
 const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
-  color: theme.palette.getContrastText(blue[600]),
-  backgroundColor: blue[600],
+  color: theme.palette.getContrastText("#615fff"),
+  backgroundColor: "#615fff",
   padding: theme.spacing(1.5, 4),
   marginInline: "auto",
   display: "block",
   borderRadius: 10,
   fontWeight: "bold",
   "&:hover": {
-    backgroundColor: blue[700],
+    backgroundColor: "#4f39f6",
     transition: "background-color 0.3s",
   },
 }));
@@ -56,7 +80,6 @@ export function DepartmentSelect({
   const departments = Object.keys(departmentFacultyMap);
   return (
     <Autocomplete
-      freeSolo
       value={value}
       inputValue={value}
       onInputChange={(_, newInputValue) => {
@@ -80,30 +103,44 @@ export function DepartmentSelect({
 function SkillSelect({
   value,
   onChange,
-  availableSkills,
+  prioritizedSkills,
+  faculty,
 }: {
   value: string[];
   onChange: (e: string[]) => void;
-  availableSkills: string[];
+  prioritizedSkills: SkillOption[];
+  faculty: string;
 }) {
   return (
     <Autocomplete
-      value={value}
+      value={prioritizedSkills.filter((opt) => value.includes(opt.skill))}
       multiple
-      onChange={(_, newValue) => onChange(newValue ?? "")}
+      onChange={(_, newValue) => {
+        onChange(newValue.map((item) => item.skill));
+      }}
       id="tags-filled"
-      options={availableSkills}
-      freeSolo
-      renderValue={(value: readonly string[], getItemProps) =>
-        value.map((option: string, index: number) => {
+      options={prioritizedSkills}
+      groupBy={(option) =>
+        option.faculty === faculty
+          ? `⭐ Recommended for ${option.faculty}`
+          : option.faculty
+      }
+      getOptionLabel={(option) =>
+        typeof option === "string" ? option : option.skill
+      }
+      renderValue={(value, getItemProps) =>
+        value.map((option, index) => {
           const { key, ...itemProps } = getItemProps({ index });
+
+          const label = typeof option === "string" ? option : option.skill;
+
           return (
-            <Chip variant="outlined" label={option} key={key} {...itemProps} />
+            <Chip key={key} label={label} variant="outlined" {...itemProps} />
           );
         })
       }
       renderInput={(params) => (
-        <TextField {...params} variant="outlined" placeholder="Add skill" />
+        <TextField {...params} placeholder="Add skill" />
       )}
     />
   );
@@ -123,7 +160,21 @@ export function EmployabilityForm() {
     internship: "",
   });
   const faculty = departmentFacultyMap[formData.department];
-  const availableSkills = facultySkillsMap[faculty] ?? [];
+  const availableSkills: SkillOption[] = Object.entries(
+    facultySkillsMap,
+  ).flatMap(([faculty, skills]) =>
+    skills.map((skill) => ({
+      faculty,
+      skill,
+    })),
+  );
+  const prioritizedSkills = availableSkills.sort((a, b) => {
+    if (a.faculty === faculty && b.faculty !== faculty) return -1;
+
+    if (a.faculty !== faculty && b.faculty === faculty) return 1;
+
+    return a.faculty.localeCompare(b.faculty);
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   useEffect(() => {
@@ -165,32 +216,47 @@ export function EmployabilityForm() {
   const [open, setOpen] = useState(false);
   const [career, setCareer] = useState("");
   const [score, setScore] = useState(0);
-
+  const [recommendations, setRecommendations] = useState<Recommendations>({
+    summary: {
+      career: "",
+      employability_score: 0,
+      message: "",
+    },
+    strengths: [],
+    action_plan: [],
+    closing_note: "",
+  });
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
 
     if (isLoading) return;
+
     setIsLoading(true);
+    setIsError(false);
+
     try {
-      const text = await fetch(
-        "https://smart-employability-api.onrender.com/predict",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        },
-      );
-      const result = await text.json();
-      console.log("AI Result:", result);
-      setCareer(result.career);
-      setScore(result.employability_score);
-      console.log(result.recommendations);
+      const response = await fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      // 🔥 THIS is the missing part
+      if (!response.ok) {
+        throw new Error(data?.error || "Server error occurred");
+      }
+
+      console.log("AI Result:", data);
+
+      setCareer(data.career);
+      setScore(data.employability_score);
+      setRecommendations(data.recommendations);
 
       handleOpen();
-      setIsLoading(false);
     } catch (error) {
       console.error("Error during AI generation:", error);
       setIsError(true);
@@ -198,7 +264,6 @@ export function EmployabilityForm() {
       setIsLoading(false);
     }
   };
-
   function ChipsArray() {
     const toggleSkill = (skill: string) => {
       setUniversalSelectedSkills((prev) =>
@@ -310,7 +375,8 @@ export function EmployabilityForm() {
                   key={formData.department}
                   value={departmentBasedSkills}
                   onChange={(e: string[]) => handleSkillChange(e)}
-                  availableSkills={availableSkills}
+                  prioritizedSkills={prioritizedSkills}
+                  faculty={faculty}
                 />
               </div>
               <div>
@@ -344,6 +410,7 @@ export function EmployabilityForm() {
             result={career}
             score={score}
             open={open}
+            recommendations={recommendations}
             handleClose={handleClose}
           />
         </div>

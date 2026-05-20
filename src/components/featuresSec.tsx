@@ -1,6 +1,6 @@
 export function FeaturesSec() {
   return (
-    <section id="features" className="container pb-10 px-10 mx-auto scroll-mt-28">
+    <section id="features" className="container pb-10 px-4 mx-auto scroll-mt-28">
       <h1 className="mb-2 text-blue-600 text-center">Features</h1>
       <p  className="lg:text-4xl text-xl font-bold leading-normal text-center sm:text-3xl xs:text-2xl mb-2">
         Core Features of the System

@@ -20,15 +20,15 @@ export function FaqSec() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const formJson = Object.fromEntries(formData.entries());
-    const email = formJson.email;
-    console.log(email);
+    // const formData = new FormData(event.currentTarget);
+    // const formJson = Object.fromEntries(formData.entries());
+    // const email = formJson.email;
+    // console.log(email);
     handleClose();
   };
 
   return (
-    <section id="suggestions" className="w-full py-16 px-6 lg:px-0 bg-linear-to-r from-blue-600 to-indigo-600 text-white scroll-mt-28">
+    <section id="suggestions" className="w-full py-16 px-4 lg:px-0 bg-linear-to-r from-blue-600 to-indigo-600 text-white scroll-mt-28">
       <Fragment>
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Subscribe</DialogTitle>

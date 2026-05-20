@@ -1,10 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  /* --spacing: 16px; */
-  --breakpoint-xs: 30rem;
   --font-sans: system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
+
 body,
 html {
   font-synthesis: none;
@@ -12,9 +11,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   scroll-behavior: smooth;
-  /* overflow: hidden; */
   height: 100%;
   width: 100%;
 }
-
 

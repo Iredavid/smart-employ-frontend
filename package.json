@@ -17,9 +17,11 @@
     "@mui/material": "^7.3.7",
     "@mui/x-charts": "^9.0.3",
     "@tailwindcss/vite": "^4.1.18",
+    "@w3ux/react-odometer": "^2.4.5",
     "hamburger-react": "^2.5.2",
     "marked": "^17.0.1",
     "react": "^19.2.0",
+    "react-countup": "^6.5.3",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.12.0",
     "tailwindcss": "^4.1.18"
