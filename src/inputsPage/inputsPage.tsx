@@ -64,6 +64,7 @@ interface EmployabilityFormData {
   cgpa: string;
   skills: string[];
   internship: string;
+  faculty: string;
 }
 
 export default function LinearIndeterminate() {
@@ -158,8 +159,15 @@ export function EmployabilityForm() {
     cgpa: "",
     skills: [],
     internship: "",
+    faculty: "",
   });
   const faculty = departmentFacultyMap[formData.department];
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      faculty,
+    }));
+  }, [faculty]);
   const availableSkills: SkillOption[] = Object.entries(
     facultySkillsMap,
   ).flatMap(([faculty, skills]) =>
