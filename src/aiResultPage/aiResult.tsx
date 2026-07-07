@@ -33,7 +33,7 @@ const settings = {
   hideLegend: true,
 };
 
-function DonutChart({ score, career }: { score: number; career: string }) {
+export function DonutChart({ score, career }: { score: number; career: string }) {
   const data = [
     {
       label: career,
@@ -46,7 +46,7 @@ function DonutChart({ score, career }: { score: number; career: string }) {
   return (
     <div className="flex items-center justify-center">
       <PieChart
-        series={[{ innerRadius: 70, outerRadius: 95, data, cornerRadius: 6 }]}
+        series={[{ innerRadius: 50, outerRadius: 80, data, cornerRadius: 6 }]}
         {...settings}
       >
         <PieCenterLabel>{score}%</PieCenterLabel>

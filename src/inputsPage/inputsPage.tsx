@@ -14,7 +14,9 @@ import { styled } from "@mui/material/styles";
 import DoneIcon from "@mui/icons-material/Done";
 import Button, { type ButtonProps } from "@mui/material/Button";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+// localStorage.removeItem("aiResult");
 
 type SkillOption = {
   faculty: string;
@@ -148,6 +150,7 @@ function SkillSelect({
 }
 
 export function EmployabilityForm() {
+  const navigate = useNavigate();
   const [universalSelectedSkills, setUniversalSelectedSkills] = useState<
     string[]
   >([]);
@@ -234,7 +237,7 @@ export function EmployabilityForm() {
     action_plan: [],
     closing_note: "",
   });
-  const handleOpen = () => setOpen(true);
+  // const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -243,9 +246,9 @@ export function EmployabilityForm() {
 
     setIsLoading(true);
     setIsError(false);
-
+    const apiUrl = import.meta.env.VITE_API_URL;
     try {
-      const response = await fetch("https://smart-employability-api.onrender.com/predict", {
+      const response = await fetch(`${apiUrl}/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -258,13 +261,14 @@ export function EmployabilityForm() {
         throw new Error(data?.error || "Server error occurred");
       }
 
-      console.log("AI Result:", data);
+      // console.log("AI Result:", data);
 
       setCareer(data.career);
       setScore(data.employability_score);
       setRecommendations(data.recommendations);
-
-      handleOpen();
+      localStorage.setItem("aiResult", JSON.stringify(data));
+      // handleOpen();
+      navigate("/ai");
     } catch (error) {
       console.error("Error during AI generation:", error);
       setIsError(true);

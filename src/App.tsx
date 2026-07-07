@@ -2,15 +2,15 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import { Home } from "./homePage/homePage";
 import { EmployabilityForm } from "./inputsPage/inputsPage";
-// import {AiResult} from "./aiResultPage/aiResult";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import EmployabilityReportPage from "./aiResultPage/pageResult";
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/inputs" element={<EmployabilityForm />} />
-      {/* <Route path="/ai" element={<AiResult />} /> */}
+      <Route path="/ai" element={<EmployabilityReportPage />} />
     </Routes>
   );
 }
