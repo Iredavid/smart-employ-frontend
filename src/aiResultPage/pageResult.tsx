@@ -16,7 +16,7 @@ import { useEffect, useMemo, useState } from "react";
 
 export default function EmployabilityReportPage() {
   const data = useMemo(() => JSON.parse(localStorage.getItem("aiResult")!), []);
-  console.log(data);
+  // console.log(data);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
