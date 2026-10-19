@@ -1,11 +1,16 @@
 export function FeaturesSec() {
   return (
-    <section id="features" className="container pb-10 px-4 mx-auto scroll-mt-28">
-      <h1 className="mb-2 text-blue-600 text-center">Features</h1>
-      <p  className="lg:text-4xl text-xl font-bold leading-normal text-center sm:text-3xl xs:text-2xl mb-2">
-        Core Features of the System
+    <section
+      id="features"
+      className="container text-center pb-10 px-4 mx-auto scroll-mt-28"
+    >
+      <h1 className="inline-block rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700 mb-4">
+        Features
+      </h1>
+      <p className="lg:text-4xl text-xl lg:font-extrabold font-bold leading-normal text-center sm:text-3xl xs:text-2xl mb-2">
+        Core Features of the <span className="text-indigo-500">System</span>
       </p>
-      <p className="sm:text-lg text-md font-normal text-center mb-10">
+      <p className="text-lg leading-8 text-gray-600 text-center mb-10">
         Discover powerful tools designed to guide your career path, improve your
         employability, and help you make smarter, data-driven decisions.{" "}
       </p>

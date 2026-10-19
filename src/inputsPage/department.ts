@@ -31,3 +31,26 @@ export const departmentFacultyMap: Record<string, string> = {
 
   Law: "Law",
 };
+
+
+export const levels = [
+  "100 Level",
+  "200 Level",
+  "300 Level",
+  "400 Level",
+  "500 Level",
+  "Graduate",
+];
+
+export const semesters = [
+  "First Semester",
+  "Second Semester",
+];
+
+export const durations = [
+  "1 Year",
+  "2 Years",
+  "3 Years",
+  "4 Years",
+  "5 Years",
+]

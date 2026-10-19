@@ -7,7 +7,12 @@ import Chip from "@mui/material/Chip";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Slide from "@mui/material/Slide";
-import { departmentFacultyMap } from "./department";
+import {
+  departmentFacultyMap,
+  durations,
+  levels,
+  semesters,
+} from "./department";
 import { facultySkillsMap, universalSkills } from "./faculty";
 import { AiResult } from "../aiResultPage/aiResult";
 import { styled } from "@mui/material/styles";
@@ -67,6 +72,9 @@ interface EmployabilityFormData {
   skills: string[];
   internship: string;
   faculty: string;
+  level: string;
+  semester: string;
+  duration: string;
 }
 
 export default function LinearIndeterminate() {
@@ -163,8 +171,19 @@ export function EmployabilityForm() {
     skills: [],
     internship: "",
     faculty: "",
+    level: "",
+    semester: "",
+    duration: "",
   });
   const faculty = departmentFacultyMap[formData.department];
+  useEffect(() => {
+    if (formData.level === "Graduate") {
+      setFormData((prev) => ({
+        ...prev,
+        semester: "",
+      }));
+    }
+  }, [formData.level]);
   useEffect(() => {
     setFormData((prev) => ({
       ...prev,
@@ -367,15 +386,99 @@ export function EmployabilityForm() {
                   value={formData.cgpa}
                   onChange={handleChange}
                   placeholder="e.g 3.45"
-                  className="w-full border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-600"
+                  className="w-full border border-gray-300 px-4 py-3.75 outline-none transition focus:border-blue-600 focus:border-2 rounded"
                   required
                 />
               </div>
             </div>
-            <label className="mb-3 block text-sm font-medium">
-              Universal Skills
-            </label>
-            <ChipsArray />
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              <div>
+                <label className="mb-2 block text-sm font-medium">Level</label>
+                <select
+                  name="level"
+                  value={formData.level}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 px-4 py-3.75 outline-none transition focus:border-blue-600 focus:border-2 rounded"
+                  required
+                >
+                  <option value="">Select level</option>
+                  {levels.map((level) => (
+                    <option key={level} value={level}>
+                      {level}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium">
+                  Semester
+                </label>
+                <select
+                  name="semester"
+                  value={formData.semester}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3.75 rounded outline-none transition border ${
+                    formData.level === "Graduate"
+                      ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+                      : "bg-white text-gray-900 border-gray-300 focus:border-blue-600 focus:border-2"
+                  }`}
+                  required={formData.level !== "Graduate"}
+                  disabled={formData.level === "Graduate"}
+                >
+                  <option value="">Select semester</option>
+                  {semesters.map((semester) => (
+                    <option key={semester} value={semester}>
+                      {semester}
+                    </option>
+                  ))}
+                </select>
+                {formData.level === "Graduate" && (
+                  <p className="mt-1 text-sm text-gray-500">
+                    Semester is not required for graduates.
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              <div>
+                <label className="mb-2 block text-sm font-medium">
+                  Programme Duration
+                </label>
+                <select
+                  name="duration"
+                  value={formData.duration}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3.75 rounded outline-none transition border ${
+                    formData.level === "Graduate"
+                      ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+                      : "bg-white text-gray-900 border-gray-300 focus:border-blue-600 focus:border-2"
+                  }`}
+                  required={formData.level !== "Graduate"}
+                  disabled={formData.level === "Graduate"}
+                >
+                  <option value="">Select programme duration</option>
+                  {durations.map((duration) => (
+                    <option key={duration} value={duration}>
+                      {duration}
+                    </option>
+                  ))}
+                </select>
+                {formData.level === "Graduate" && (
+                  <p className="mt-1 text-sm text-gray-500">
+                    Programme duration is not required for graduates.
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="mb-3 block text-sm font-medium">
+                  Universal Skills
+                </label>
+                <ChipsArray />
+              </div>
+            </div>
+
             {/* Experience */}
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               {/* Skills */}
@@ -399,7 +502,7 @@ export function EmployabilityForm() {
                   name="internship"
                   value={formData.internship}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-600"
+                  className="w-full border border-gray-300 px-4 py-3.75 outline-none transition focus:border-blue-600 focus:border-2 rounded"
                   required
                 >
                   <option value="">Select</option>

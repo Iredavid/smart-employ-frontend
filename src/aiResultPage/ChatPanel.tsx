@@ -34,11 +34,18 @@ export default function ChatPanel({ career_name }: { career_name: string }) {
 
   const [messages, setMessages] = useState<Message[]>([]);
 
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({
-      behavior: "smooth",
+    // Scroll only the chat container itself, never the page.
+    // (scrollIntoView on bottomRef would also scroll window/ancestors,
+    // which is what was causing the page to jump on mount and on send.)
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: messages.length > 0 ? "smooth" : "auto",
     });
   }, [messages, loading]);
 
@@ -115,33 +122,49 @@ export default function ChatPanel({ career_name }: { career_name: string }) {
       sticky
       top-6
       overflow-hidden
+      shadow-[0_2px_20px_rgba(15,23,42,0.06)]
     "
     >
       {/* Header */}
 
-      <div className="border-b px-6 py-5">
-        <h2 className="font-bold text-lg">AI Career Advisor</h2>
+      <div className="border-b border-slate-100 px-6 py-5 bg-linear-to-r from-indigo-500 to-indigo-400">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-10 h-10 rounded-2xl bg-white/15 backdrop-blur-sm">
+            <SmartToyIcon sx={{ color: "white", fontSize: 22 }} />
+          </div>
 
-        <p className="text-sm text-gray-500">
-          Ask questions about your employability report
-        </p>
+          <div>
+            <h2 className="font-bold text-lg text-white leading-tight">
+              AI Career Advisor
+            </h2>
+
+            <p className="text-sm text-blue-100">
+              Ask questions about your employability report
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Chat */}
 
       <Box
-        className="flex-1 overflow-y-auto px-4 py-5"
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto px-4 py-5 bg-slate-50/60"
         display="flex"
         flexDirection="column"
         gap={3}
       >
         {messages.length === 0 && (
-          <div className="text-center text-gray-400 mt-20">
-            <SmartToyIcon sx={{ fontSize: 60 }} />
+          <div className="text-center text-gray-400 mt-20 px-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-50 mb-2">
+              <SmartToyIcon sx={{ fontSize: 32, color: "#2563eb" }} />
+            </div>
 
-            <p className="mt-4">Ask anything about your report.</p>
+            <p className="mt-4 font-medium text-gray-600">
+              Ask anything about your report.
+            </p>
 
-            <p className="text-sm">
+            <p className="text-sm text-gray-400 mt-1">
               Your AI advisor will explain your recommendations, strengths and
               learning roadmap.
             </p>
@@ -162,19 +185,25 @@ export default function ChatPanel({ career_name }: { career_name: string }) {
             >
               <Avatar
                 sx={{
-                  width: 36,
-                  height: 36,
+                  width: 34,
+                  height: 34,
+                  bgcolor: message.role === "user" ? "#2563eb" : "#e2e8f0",
+                  color: message.role === "user" ? "#fff" : "#475569",
                 }}
               >
-                {message.role === "user" ? <PersonIcon /> : <SmartToyIcon />}
+                {message.role === "user" ? (
+                  <PersonIcon fontSize="small" />
+                ) : (
+                  <SmartToyIcon fontSize="small" />
+                )}
               </Avatar>
 
               <Paper
                 elevation={0}
-                className={`rounded-3xl px-4 py-3 max-w-75 md:max-w-105 ${
+                className={`rounded-3xl px-4 py-3 max-w-75 md:max-w-full text-sm leading-relaxed prose prose-sm prose-p:my-1 prose-ul:my-1 prose-ol:my-1 ${
                   message.role === "user"
-                    ? "bg-blue-600 text-white"
-                    : "bg-slate-100"
+                    ? "bg-blue-600 text-white rounded-tr-md"
+                    : "bg-white text-slate-700 border border-slate-100 rounded-tl-md shadow-sm"
                 }`}
               >
                 <ReactMarkdown>{message.content}</ReactMarkdown>
@@ -184,30 +213,59 @@ export default function ChatPanel({ career_name }: { career_name: string }) {
         ))}
 
         {loading && (
-          <Box display="flex" gap={2}>
-            <Avatar>
-              <SmartToyIcon />
+          <Box display="flex" gap={1} alignItems="flex-start">
+            <Avatar
+              sx={{
+                width: 34,
+                height: 34,
+                bgcolor: "#e2e8f0",
+                color: "#475569",
+              }}
+            >
+              <SmartToyIcon fontSize="small" />
             </Avatar>
 
-            <Paper elevation={0} className="rounded-3xl px-5 py-4 bg-slate-100">
-              <CircularProgress size={22} />
+            <Paper
+              elevation={0}
+              className="rounded-3xl rounded-tl-md px-5 py-3 bg-white border border-slate-100 shadow-sm flex items-center"
+            >
+              <CircularProgress
+                size={16}
+                thickness={5}
+                sx={{ color: "#2563eb" }}
+              />
             </Paper>
           </Box>
         )}
-
-        <div ref={bottomRef} />
       </Box>
 
       {/* FAQ */}
 
       {messages.length === 0 && (
-        <Box display="flex" flexWrap="wrap" gap={1} px={2} pb={2}>
+        <Box
+          display="flex"
+          flexWrap="wrap"
+          gap={1}
+          px={3}
+          pb={3}
+          pt={1}
+          className="bg-white border-t border-slate-100"
+        >
           {faq.map((question) => (
             <Chip
               key={question}
               clickable
               onClick={() => sendMessage(question)}
               label={question}
+              sx={{
+                bgcolor: "#E0E7FF",
+                color: "#6366F1",
+                fontWeight: 500,
+                border: "1px solid #dbeafe",
+                "&:hover": {
+                  bgcolor: "#dbeafe",
+                },
+              }}
             />
           ))}
         </Box>
@@ -215,8 +273,8 @@ export default function ChatPanel({ career_name }: { career_name: string }) {
 
       {/* Input */}
 
-      <div className="border-t p-4 bg-white">
-        <Box display="flex" gap={2}>
+      <div className="border-t border-slate-100 p-4 bg-white">
+        <Box display="flex" gap={1.5} alignItems="center">
           <TextField
             fullWidth
             size="small"
@@ -227,104 +285,44 @@ export default function ChatPanel({ career_name }: { career_name: string }) {
             onKeyDown={(e) => {
               if (e.key === "Enter") sendMessage();
             }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "999px",
+                bgcolor: "#f8fafc",
+                "& fieldset": {
+                  borderColor: "#e2e8f0",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#93c5fd",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#2563eb",
+                },
+              },
+            }}
           />
 
           <IconButton
-            color="primary"
             disabled={loading}
             onClick={() => sendMessage()}
+            sx={{
+              bgcolor: "#2563eb",
+              color: "white",
+              width: 40,
+              height: 40,
+              "&:hover": {
+                bgcolor: "#1d4ed8",
+              },
+              "&.Mui-disabled": {
+                bgcolor: "#e2e8f0",
+                color: "#94a3b8",
+              },
+            }}
           >
-            <SendIcon />
+            <SendIcon fontSize="small" />
           </IconButton>
         </Box>
       </div>
     </Paper>
   );
 }
-// import { Paper, TextField, IconButton, Box, Chip } from "@mui/material";
-
-// import SendIcon from "@mui/icons-material/Send";
-// import { useState } from "react";
-
-// export default function ChatPanel() {
-//   const [formData, setFormData] = useState({ input: "" });
-//   const faq = [
-//     "Why was I recommended Data Analyst?",
-//     "What certifications should I take?",
-//     "How can I improve my employability score?",
-//     "Create a 3-month learning roadmap",
-//     "where can i get more internship training?",
-//   ];
-//   return (
-//     <Paper
-//       elevation={0}
-//       className="
-//       rounded-3xl
-//       border
-//       border-slate-200
-//       lg:h-[85vh]
-//       flex
-//       flex-col
-//       sticky
-//       top-5
-//       "
-//     >
-//       <div className="p-5 border-b">
-//         <h2 className="font-bold">AI Career Advisor</h2>
-
-//         <p className="text-sm text-gray-500">Ask about your report</p>
-//       </div>
-
-//       <div className="flex-1 flex flex-col gap-2 overflow-y-auto p-4 space-y-4">
-//         <div className="bg-slate-100 p-3 rounded-2xl ml-auto max-w-[80%]">
-//           How can I improve my employability score?
-//         </div>
-
-//         <div className="bg-blue-600 text-white p-3 rounded-2xl max-w-[80%]">
-//           Focus on cloud computing and internships.
-//         </div>
-//       </div>
-
-//       <div className="">
-//         <div className="p-4 border-t flex gap-2">
-//           <TextField
-//             size="small"
-//             fullWidth
-//             placeholder="Ask about your report..."
-//             onChange={(e) => {
-//               setFormData({ input: e.target.value });
-//             }}
-//           />
-
-//           <IconButton
-//             color="primary"
-//             onClick={async () => {
-//               const interaction_id = sessionStorage.getItem("interactionId");
-//               const response = await fetch("http://127.0.0.1:5000/chat", {
-//                 method: "POST",
-//                 headers: { "Content-Type": "application/json" },
-//                 body: JSON.stringify({ ...formData, interaction_id }),
-//               });
-
-//               const data = await response.json();
-//               console.log(data);
-//             }}
-//           >
-//             <SendIcon />
-//           </IconButton>
-//         </div>
-
-//         <Box display="flex" flexWrap="wrap" gap={1} px={2} pb={2}>
-//           {faq.map((question, index) => (
-//             <Chip
-//               key={index}
-//               label={question}
-//               variant="filled"
-//               color="default"
-//             />
-//           ))}
-//         </Box>
-//       </div>
-//     </Paper>
-//   );
-// }

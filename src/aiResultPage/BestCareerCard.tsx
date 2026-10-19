@@ -33,6 +33,7 @@ export function BestCareerCard({
               mt: 2,
               fontWeight: 600,
               fontSize: 15,
+              backgroundColor: "#6366F1",
             }}
           />
         </div>
@@ -49,9 +50,10 @@ export function BestCareerCard({
         sx={{
           height: 12,
           borderRadius: 8,
-          backgroundColor: "#E5E7EB",
+          backgroundColor: "#6366F17A",
           "& .MuiLinearProgress-bar": {
             borderRadius: 8,
+            backgroundColor: "#6366F1",
           },
         }}
       />

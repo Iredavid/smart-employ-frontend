@@ -43,7 +43,7 @@ export default function CareerMatches({
                 {career.career}
               </Typography>
 
-              <Typography variant="h5" color="primary" fontWeight={700}>
+              <Typography variant="h5"  fontWeight={700} sx={{ color: "#4F46E5" }}>
                 {career.score}%
               </Typography>
             </Box>
@@ -55,9 +55,11 @@ export default function CareerMatches({
               sx={{
                 height: 12,
                 borderRadius: 8,
-                backgroundColor: "#E5E7EB",
+                // color: "4F46E5",
+                backgroundColor: "#6366F17A",
                 "& .MuiLinearProgress-bar": {
                   borderRadius: 8,
+                  backgroundColor: "#6366F1",
                 },
               }}
             />
