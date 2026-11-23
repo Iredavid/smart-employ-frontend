@@ -12,8 +12,9 @@ import SendIcon from "@mui/icons-material/Send";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import PersonIcon from "@mui/icons-material/Person";
 
-import ReactMarkdown from "react-markdown";
+// import ReactMarkdown from "react-markdown";
 import { useEffect, useRef, useState } from "react";
+import { MarkdownMessage } from "./markMessage";
 
 interface Message {
   role: "user" | "assistant";
@@ -202,11 +203,11 @@ export default function ChatPanel({ career_name }: { career_name: string }) {
                 elevation={0}
                 className={`rounded-3xl px-4 py-3 max-w-75 md:max-w-full text-sm leading-relaxed prose prose-sm prose-p:my-1 prose-ul:my-1 prose-ol:my-1 ${
                   message.role === "user"
-                    ? "bg-blue-600 text-white rounded-tr-md"
+                    ? "bg-blue-600 text-white rounded-tr-md whitespace-pre-wrap"
                     : "bg-white text-slate-700 border border-slate-100 rounded-tl-md shadow-sm"
                 }`}
               >
-                <ReactMarkdown>{message.content}</ReactMarkdown>
+                <MarkdownMessage content={message.content} />
               </Paper>
             </Box>
           </Box>
