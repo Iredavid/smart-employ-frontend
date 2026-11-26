@@ -8,7 +8,7 @@ export const universalSkills: ChipData[] = [
   { key: 1, label: "Research Skills" },
   { key: 2, label: "Critical Thinking" },
   { key: 3, label: "Data Analysis" },
-  { key: 4, label: "Networking" },
+  // { key: 4, label: "Networking" },
   // "Communication",
   // "Research Skills",
   // "Critical Thinking",
@@ -26,6 +26,7 @@ export const facultySkillsMap: Record<string, string[]> = {
     "Cybersecurity",
     "Database Management",
     "UI/UX Design",
+    "Networking"
     // "Cloud Computing",
   ],
 
